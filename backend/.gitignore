@@ -1,0 +1,9 @@
+# Dependency directories
+node_modules
+package-lock.json
+
+# Dotenv environment variables file
+.env
+
+# Docker dev files 
+docker-data
