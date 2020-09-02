@@ -14,14 +14,7 @@ function errorHandler(err, req, res, next) {
   });
 }
 
-function hasAuth(req, res, next) {
-  const auth = req.cookies.user;
-  if (!auth) res.sendStatus(401);
-  next();
-}
-
 module.exports = {
   notFound,
   errorHandler,
-  hasAuth,
 };
