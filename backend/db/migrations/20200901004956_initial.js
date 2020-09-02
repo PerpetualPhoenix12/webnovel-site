@@ -57,7 +57,6 @@ exports.up = async (knex) => {
       table.datetime('published_at');
 
       massReferences(['editors', 'translators', 'novels'], table);
-
       addDefaultColumns(table);
     }),
     knex.schema.createTable(tableNames.reviews, (table) => {
