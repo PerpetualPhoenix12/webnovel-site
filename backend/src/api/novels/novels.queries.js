@@ -5,11 +5,11 @@ module.exports = {
   all() {
     return db(tableNames.novels);
   },
-  async get(id) {
-    const [novel] = await db(tableNames.novels)
+  get(id) {
+    return db(tableNames.novels)
       .where({
         id,
-      });
-    return novel;
+      })
+      .first();
   },
 };
