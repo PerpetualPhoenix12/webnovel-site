@@ -6,6 +6,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const middlewares = require('./middlewares.js');
+const api = require('./api');
 
 const app = express();
 
@@ -17,8 +18,6 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
-// app.use(middlewares.hasAuth);
-
 app.get('/', (req, res) => {
   res.status(418);
   res.json({
@@ -26,9 +25,9 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use('/api/v1', api);
+
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
-
-// Add error handling
 
 module.exports = app;

@@ -14,7 +14,22 @@ function errorHandler(err, req, res, next) {
   });
 }
 
+function verifyNovelID(req, res, next) {
+  const { id } = req.params;
+  try {
+    if (Number.isNaN(+id)) {
+      res.status(400);
+      throw new Error('Invalid novel ID');
+    } else {
+      return next();
+    }
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   notFound,
   errorHandler,
+  verifyNovelID,
 };
