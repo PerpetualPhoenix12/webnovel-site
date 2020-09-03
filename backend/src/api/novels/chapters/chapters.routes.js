@@ -20,3 +20,11 @@ router.get('/:number', verifyChapterNumber, async (req, res, next) => {
 });
 
 module.exports = router;
+
+/*
+* TODO
+* [] Set up chapter schema with objection
+* [] Add endpoint to create chapter
+* [] Add endpoint to update chapter
+* [] Add endpoint to delete chapter
+*/

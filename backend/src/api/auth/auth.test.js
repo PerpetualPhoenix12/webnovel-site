@@ -2,7 +2,7 @@ const supertest = require('supertest');
 const app = require('../../app.js');
 
 describe('POST /api/v1/auth/signup', () => {
-  it('should return a 200 if data is valid', async (done) => {
+  it('should return a 200 if data is valid', (done) => {
     supertest(app)
       .post('/api/v1/auth/signup')
       .send({

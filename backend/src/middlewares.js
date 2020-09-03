@@ -1,3 +1,6 @@
+const jwt = require('./lib/jwt.js');
+const { errorMessages } = require('./constants/messages');
+
 function notFound(req, res, next) {
   const error = new Error(`Not found - ${req.originalUrl}`);
   res.status(404);
@@ -40,10 +43,29 @@ function verifyUserID(req, res, next) {
   return verifyNumber(res, next, 'Invalid user ID', req.params.id);
 }
 
+async function isLoggedIn(req, res, next) {
+  try {
+    const header = req.headers.authorization;
+    if (!header) throw new Error(errorMessages.invalidAuth);
+    const token = header.split(' ')[1];
+    const decoded = await jwt.verify(token);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    if (err.message === errorMessages.invalidAuth) res.status(401);
+    else if (err.message === errorMessages.invalidToken) {
+      res.status(401);
+      err.message = errorMessages.invalidAuth;
+    }
+    next(err);
+  }
+}
+
 module.exports = {
   notFound,
   errorHandler,
   verifyNovelID,
   verifyChapterNumber,
   verifyUserID,
+  isLoggedIn,
 };

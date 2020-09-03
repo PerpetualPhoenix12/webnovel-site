@@ -6,7 +6,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const users = await User.query();
-  res.json(users);
+  res.json(users.map((user) => {
+    // eslint-disable-next-line no-param-reassign
+    delete user.password;
+    return user;
+  }));
 });
 
 router.get('/:id', verifyUserID, async (req, res, next) => {

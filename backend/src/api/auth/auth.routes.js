@@ -102,6 +102,10 @@ router.post('/signup', async (req, res, next) => {
   }
 });
 
+router.post('/token', (req, res) => {
+  res.json(req.user);
+});
+
 module.exports = router;
 
 /*
@@ -110,7 +114,9 @@ module.exports = router;
  * [X] Mount routes
  * [X] Validate request body
  * [X] Generate token
- * [] Verify token
- * [] isLoggedIn middleware
+ * [X] Verify token
+ * [X] isLoggedIn middleware
+ * [] Sign payload with custom roles claim
+ * [] hasAuth middleware
  * [] Rate limit endpoints
 */

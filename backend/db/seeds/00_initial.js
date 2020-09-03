@@ -6,7 +6,7 @@ exports.seed = async (knex) => {
   await Promise.all(Object.keys(tableNames).map((table_name) => knex(table_name).del()));
 
   // const password = crypto.randomBytes(15).toString('hex');
-  const password = 'MuffinsRG00D:'
+  const password = 'MuffinsRG00D:';
 
   const user = {
     id: 1,

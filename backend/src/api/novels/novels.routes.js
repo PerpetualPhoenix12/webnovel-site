@@ -22,3 +22,11 @@ router.use('/:id/chapters', verifyNovelID, (req, res, next) => {
 }, chapters);
 
 module.exports = router;
+
+/*
+* TODO
+* [] Set up novel schema with objection
+* [] Add endpoint to create novel
+* [] Add endpoint to update novel
+* [] Add endpoint to delete novel
+*/
