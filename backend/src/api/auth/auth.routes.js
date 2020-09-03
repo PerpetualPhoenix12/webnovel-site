@@ -108,8 +108,8 @@ module.exports = router;
  TODO:
  * [X] Install dependencies
  * [X] Mount routes
- * [] Validate request body
- * [] Generate token
+ * [X] Validate request body
+ * [X] Generate token
  * [] Verify token
  * [] isLoggedIn middleware
  * [] Rate limit endpoints
