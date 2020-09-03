@@ -1,5 +1,6 @@
 const express = require('express');
 const queries = require('./chapters.queries.js');
+const { verifyChapterNumber } = require('../../../middlewares.js');
 
 const router = express.Router();
 
@@ -10,21 +11,12 @@ router.get('/', async (req, res, next) => {
   return next();
 });
 
-router.get('/:number', async (req, res, next) => {
+router.get('/:number', verifyChapterNumber, async (req, res, next) => {
   const { id } = req;
   const { number } = req.params;
-  try {
-    if (Number.isNaN(+number)) {
-      res.status(400);
-      throw new Error('Invalid chapter number');
-    } else {
-      const chapter = await queries.get(id, number);
-      if (chapter) return res.json(chapter);
-      return next();
-    }
-  } catch (error) {
-    return next(error);
-  }
+  const chapter = await queries.get(id, number);
+  if (chapter) return res.json(chapter);
+  return next();
 });
 
 module.exports = router;

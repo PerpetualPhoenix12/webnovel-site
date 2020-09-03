@@ -11,15 +11,15 @@ function errorHandler(err, req, res, next) {
     status: statusCode,
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? 'no' : err.stack,
+    errors: err.errors || undefined,
   });
 }
 
-function verifyNovelID(req, res, next) {
-  const { id } = req.params;
+function verifyNumber(res, next, error_msg, val) {
   try {
-    if (Number.isNaN(+id)) {
+    if (Number.isNaN(+val)) {
       res.status(400);
-      throw new Error('Invalid novel ID');
+      throw new Error(error_msg);
     } else {
       return next();
     }
@@ -28,8 +28,22 @@ function verifyNovelID(req, res, next) {
   }
 }
 
+function verifyNovelID(req, res, next) {
+  return verifyNumber(res, next, 'Invalid novel ID', req.params.id);
+}
+
+function verifyChapterNumber(req, res, next) {
+  return verifyNumber(res, next, 'Invalid chapter number', req.params.number);
+}
+
+function verifyUserID(req, res, next) {
+  return verifyNumber(res, next, 'Invalid user ID', req.params.id);
+}
+
 module.exports = {
   notFound,
   errorHandler,
   verifyNovelID,
+  verifyChapterNumber,
+  verifyUserID,
 };

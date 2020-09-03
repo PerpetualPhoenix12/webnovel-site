@@ -1,5 +1,8 @@
 const express = require('express');
-const novels = require('./novels/novels.routes');
+
+const novels = require('./novels/novels.routes.js');
+const users = require('./users/users.routes.js');
+const auth = require('./auth/auth.routes.js');
 
 const router = express.Router();
 
@@ -8,6 +11,9 @@ router.get('/', (req, res) => {
     message: 'API V1 BASE URL',
   });
 });
+
 router.use('/novels', novels);
+router.use('/users', users);
+router.use('/auth', auth);
 
 module.exports = router;

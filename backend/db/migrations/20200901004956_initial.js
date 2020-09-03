@@ -35,7 +35,7 @@ exports.up = async (knex) => {
       table.string('email').notNullable().unique();
       table.string('username').notNullable();
       table.string('password', 127).notNullable();
-      table.string('avatar_url', 2000).defaultTo('https://thebiem.com/wp-content/uploads/2018/04/Jiang_Chen-1-min-683x1024.png.webp');
+      table.string('avatar_url', 2000).defaultTo('https://tinyurl.com/y3f4r7m2');
       table.datetime('last_login');
       addDefaultColumns(table);
     }),
