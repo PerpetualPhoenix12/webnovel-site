@@ -24,3 +24,12 @@ module.exports = {
   sign,
   verify,
 };
+
+/*
+* Sign out options:
+* 1. Delete JWT from client's local storage (preferred)
+* 2. Create token blacklist (but then it's no longer stateless)
+* 3. Have multiple keys and shard the tokens into K groups.
+*    Revoke the key for the shard that user is in,
+*    thus signing out N/K users (who have to use their refresh tokens)
+*/

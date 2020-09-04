@@ -136,7 +136,7 @@ describe('POST /api/v1/auth/signin', () => {
 /*
  ** Status code breakdown:
  * 200 OK - Request was successful
- * 400 Bad Request - Used when the *sign up* data is an invalid format
+ * 400 Bad Request - Used when the *sign up* data is syntactically invalid (e.g. missing field)
  * 401 Unauthorised - Used the the *sign in* data is invalid
  * 402 Payment Required - Used at *sign in* (£1/login attempt)
  * 403 Forbidden - Used at signup when the email already exists

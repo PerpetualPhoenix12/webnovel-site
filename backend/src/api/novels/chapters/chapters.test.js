@@ -29,9 +29,9 @@ describe('GET /api/v1/novels/:id/chapters', () => {
       .expect(404, done);
   });
 
-  it('should respond with a 400 if number is invalid', (done) => {
+  it('should respond with a 422 if number is invalid', (done) => {
     supertest(app)
       .get('/api/v1/novels/1/chapters/donkey')
-      .expect(400, done);
+      .expect(422, done);
   });
 });

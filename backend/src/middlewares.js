@@ -1,10 +1,11 @@
+/* eslint-disable no-multi-spaces */
 const jwt = require('./lib/jwt.js');
 const { errorMessages } = require('./constants/messages');
 
 function notFound(req, res, next) {
-  const error = new Error(`Not found - ${req.originalUrl}`);
+  const err = new Error(`Not found - ${req.originalUrl}`);
   res.status(404);
-  next(error);
+  next(err);
 }
 
 function errorHandler(err, req, res, next) {
@@ -21,13 +22,13 @@ function errorHandler(err, req, res, next) {
 function verifyNumber(res, next, error_msg, val) {
   try {
     if (Number.isNaN(+val)) {
-      res.status(400);
+      res.status(422);
       throw new Error(error_msg);
     } else {
-      return next();
+      next();
     }
-  } catch (error) {
-    return next(error);
+  } catch (err) {
+    next(err);
   }
 }
 
@@ -41,6 +42,31 @@ function verifyChapterNumber(req, res, next) {
 
 function verifyUserID(req, res, next) {
   return verifyNumber(res, next, 'Invalid user ID', req.params.id);
+}
+
+function verifyPayloadSize(req, res, next) {
+  if (req.params.id > 2 ** 31 || req.params.number > 2 ** 31) {
+    res.status(404);
+    next(new Error(`Not found - ${req.originalUrl}`));
+  } else next();
+}
+
+function verifyMethod(req, res, next) {
+  const split_path = req.path.split('/').filter((v) => v !== '');
+  const methods = {
+    0: ['GET', 'POST'],               // /api/v1/novels/
+    1: ['GET', 'PATCH', 'DELETE'],    // /api/v1/novels/:id
+    2: ['GET', 'POST'],               // /api/v1/novels/:id/chapters
+    3: ['GET', 'PATCH', 'DELETE'],    // /api/v1/novels/:id/chapters/:id
+  };
+  const allowed_methods = methods[split_path.length];
+  if (allowed_methods.includes(req.method)) next();
+  else {
+    const err = new Error('Method Not Allowed');
+    res.set('Allow', allowed_methods.join(', '));
+    res.status(405);
+    next(err);
+  }
 }
 
 async function isLoggedIn(req, res, next) {
@@ -67,5 +93,7 @@ module.exports = {
   verifyNovelID,
   verifyChapterNumber,
   verifyUserID,
+  verifyPayloadSize,
+  verifyMethod,
   isLoggedIn,
 };

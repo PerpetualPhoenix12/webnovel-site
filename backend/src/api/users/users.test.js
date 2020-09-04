@@ -41,9 +41,9 @@ describe('GET /api/v1/users', () => {
       .expect(404, done);
   });
 
-  it('should respond with a 400 if id is invalid', (done) => {
+  it('should respond with a 422 if id is invalid', (done) => {
     supertest(app)
       .get('/api/v1/users/donkey')
-      .expect(400, done);
+      .expect(422, done);
   });
 });

@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser');
 
 const middlewares = require('./middlewares.js');
 const api = require('./api');
+const initObjection = require('./db.js');
+
+initObjection();
 
 const app = express();
 
@@ -25,7 +28,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/api/v1', middlewares.isLoggedIn, api);
+app.use('/api/v1', api);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

@@ -1,32 +1,6 @@
 const tableNames = require('../../src/constants/tableNames.js');
 const positions = require('../../src/constants/positions.js');
-
-function addDefaultColumns(table) {
-  // Set created_at and updated_at columns
-  table.timestamps(false, true);
-  table.datetime('deleted_at');
-}
-
-async function createNameTable(knex, table_name) {
-  return knex.schema.createTable(table_name, (table) => {
-    table.increments().notNullable();
-    table.string('name').unique();
-    addDefaultColumns(table);
-  });
-}
-
-function references(table_name, table) {
-  table
-    .integer(`${table_name.slice(0, -1)}_id`)
-    .unsigned()
-    .references('id')
-    .inTable(table_name)
-    .onDelete('cascade');
-}
-
-function massReferences(table_names, table) {
-  table_names.forEach((table_name) => references(tableNames[table_name], table));
-}
+const tableUtils = require('../../src/lib/tableUtils.js');
 
 exports.up = async (knex) => {
   await Promise.all([
@@ -37,17 +11,18 @@ exports.up = async (knex) => {
       table.string('password', 127).notNullable();
       table.string('avatar_url', 2000).defaultTo('https://tinyurl.com/y3f4r7m2');
       table.datetime('last_login');
-      addDefaultColumns(table);
+      tableUtils.addDefaultColumns(table);
     }),
-    positions.forEach((pos) => createNameTable(knex, tableNames[pos])),
+    positions.forEach((pos) => tableUtils.createNameTable(knex, tableNames[pos])),
     knex.schema.createTable(tableNames.novels, (table) => {
       table.increments().notNullable();
-      table.string('title').notNullable();
+      table.string('title').notNullable().unique();
       table.string('synopsis', 1000).notNullable();
       table.integer('view_count').unsigned().defaultTo(0);
+      table.string('cover_url', 2000).notNullable();
 
-      references(tableNames.authors, table);
-      addDefaultColumns(table);
+      tableUtils.references(tableNames.authors, table);
+      tableUtils.addDefaultColumns(table);
     }),
     knex.schema.createTable(tableNames.chapters, (table) => {
       table.increments().notNullable();
@@ -56,19 +31,22 @@ exports.up = async (knex) => {
       table.integer('number').unsigned().notNullable();
       table.datetime('published_at');
 
-      massReferences(['editors', 'translators', 'novels'], table);
-      addDefaultColumns(table);
+      tableUtils.massReferences(['editors', 'translators', 'novels'], table);
+      tableUtils.addDefaultColumns(table);
     }),
     knex.schema.createTable(tableNames.reviews, (table) => {
       table.increments().notNullable();
       table.string('content', 500).notNullable();
       table.integer('rating').unsigned().notNullable();
 
-      massReferences(['users', 'novels'], table);
+      tableUtils.massReferences(['users', 'novels'], table);
     }),
   ]);
+  await tableUtils.createUpdatedAtFunction(knex);
+  await tableUtils.addUpdateTrigger(knex);
 };
 
 exports.down = async (knex) => {
   await Promise.all(Object.keys(tableNames).map((table) => knex.schema.dropTable(table)));
+  await knex.raw('DROP FUNCTION IF EXISTS update_updated_at;');
 };
