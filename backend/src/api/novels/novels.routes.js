@@ -1,7 +1,7 @@
 const express = require('express');
 const Novel = require('./novels.model.js');
 const chapters = require('./chapters/chapters.routes.js');
-const { verifyNovelID, verifyPayloadSize, verifyMethod, errorHandler } = require('../../middlewares.js');
+const { verifyNovelID, verifyPayloadSize, verifyMethod } = require('../../middlewares.js');
 const { errorMessages } = require('../../constants/messages.js');
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   res.json(novels);
 });
 
-// TODO: [] Add request data validation
+
 router.post('/', async (req, res, next) => {
   try {
     const novel = await Novel.query().insert(req.body);

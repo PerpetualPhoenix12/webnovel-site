@@ -1,4 +1,10 @@
 /* eslint-disable no-multi-spaces */
+const {
+  ValidationError,
+  UniqueViolationError,
+  NotNullViolationError,
+  ForeignKeyViolationError,
+} = require('objection');
 const jwt = require('./lib/jwt.js');
 const { errorMessages } = require('./constants/messages');
 const methods = require('./constants/methods.js');
@@ -10,14 +16,45 @@ function notFound(req, res, next) {
 }
 
 function errorHandler(err, req, res, next) {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  res.json({
-    status: statusCode,
-    message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? 'no' : err.stack,
-    errors: err.errors || undefined,
-  });
+  if (err instanceof ValidationError) {
+    switch (err.type) {
+      case 'ModelValidation':
+        res.status(400).send({
+          status: err.statusCode,
+          message: err.message,
+        });
+        break;
+      default:
+        res.status(400).send({
+          message: err.message,
+          type: 'UnknownValidationError',
+        });
+        break;
+    }
+  } else if (err instanceof UniqueViolationError) {
+    res.status(409).send({
+      message: err.message,
+      type: 'UniqueViolation',
+    });
+  } else if (err instanceof NotNullViolationError) {
+    res.status(400).send({
+      mesesage: err.message,
+      type: 'NotNullViolationError',
+    });
+  } else if (err instanceof ForeignKeyViolationError) {
+    res.status(409).send({
+      message: err.message,
+      type: 'ForeignKeyViolation',
+    });
+  } else {
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    res.status(statusCode);
+    res.json({
+      status: statusCode,
+      message: err.message,
+      errors: err.errors || undefined,
+    });
+  }
 }
 
 function verifyNumber(res, next, err_msg, val) {
