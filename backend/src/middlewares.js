@@ -1,6 +1,7 @@
 /* eslint-disable no-multi-spaces */
 const jwt = require('./lib/jwt.js');
 const { errorMessages } = require('./constants/messages');
+const methods = require('./constants/methods.js');
 
 function notFound(req, res, next) {
   const err = new Error(`Not found - ${req.originalUrl}`);
@@ -19,11 +20,11 @@ function errorHandler(err, req, res, next) {
   });
 }
 
-function verifyNumber(res, next, error_msg, val) {
+function verifyNumber(res, next, err_msg, val) {
   try {
     if (Number.isNaN(+val)) {
       res.status(422);
-      throw new Error(error_msg);
+      throw new Error(err_msg);
     } else {
       next();
     }
@@ -53,12 +54,6 @@ function verifyPayloadSize(req, res, next) {
 
 function verifyMethod(req, res, next) {
   const split_path = req.path.split('/').filter((v) => v !== '');
-  const methods = {
-    0: ['GET', 'POST'],               // /api/v1/novels/
-    1: ['GET', 'PATCH', 'DELETE'],    // /api/v1/novels/:id
-    2: ['GET', 'POST'],               // /api/v1/novels/:id/chapters
-    3: ['GET', 'PATCH', 'DELETE'],    // /api/v1/novels/:id/chapters/:id
-  };
   const allowed_methods = methods[split_path.length];
   if (allowed_methods.includes(req.method)) next();
   else {

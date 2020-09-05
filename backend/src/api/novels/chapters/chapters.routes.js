@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   const { id } = req;
-  if (id > 2 ** 31) next();
   const chapters = await Chapter.query()
     .whereNull('deleted_at')
     .andWhere('novel_id', id)
@@ -20,7 +19,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const chapter = req.body;
-    chapter.novel_id = req.id;
+    chapter.novel_id = Number(req.id);
     const createdChapter = await Chapter.query().insert(chapter);
     res.json(createdChapter);
   } catch (err) {
@@ -80,8 +79,8 @@ router.delete('/:number', async (req, res, next) => {
       .patch({
         deleted_at: new Date().toISOString(),
       })
-      .returning('*')
-      .first();
+      .first()
+      .returning('*');
     if (deleted) res.json(deleted);
     next();
   } catch (err) {
@@ -93,7 +92,7 @@ module.exports = router;
 
 /*
 * TODO
-* [] Set up chapter schema with objection
+* [X] Set up chapter schema with objection
 * [X] Add endpoint to create chapter
 * [X] Add endpoint to update chapter
 * [X] Add endpoint to delete chapter

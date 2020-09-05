@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Novel",
+  "description": "A novel",
+  "required": [
+      "title",
+      "synopsis",
+      "cover_url",
+      "author_id"
+  ],
+  "properties": {
+      "id": {
+          "$id": "#/properties/id",
+          "type": "integer",
+          "title": "The novel's ID."
+      },
+      "title": {
+        "$id": "#/properties/title",
+        "type": "string",
+        "title": "The novel's title."
+      },
+      "synopsis": {
+        "$id": "#/properties/synopsis",
+        "type": "string",
+        "title": "The novel's synopsis."
+      },
+      "cover_url": {
+        "$id": "#/properties/cover_url",
+        "type": "string",
+        "format": "uri",
+        "title": "The url for the novel's cover image."
+      },
+      "author_id": {
+        "$id": "#/properties/author_id",
+        "type": "number",
+        "title": "The ID of the author that wrote the novel."
+      },
+      "deleted_at": {
+          "$id": "#/properties/deleted_at",
+          "type": "string",
+          "title": "The date the novel was deleted."
+      },
+      "created_at": {
+          "$id": "#/properties/created_at",
+          "type": "string",
+          "title": "The novel's creation date."
+      },
+      "updated_at": {
+          "$id": "#/properties/updated_at",
+          "type": "string",
+          "title": "The date the novel was last updated."
+      }
+  },
+  "additionalProperties": false
+}

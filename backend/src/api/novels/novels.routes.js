@@ -1,7 +1,7 @@
 const express = require('express');
 const Novel = require('./novels.model.js');
 const chapters = require('./chapters/chapters.routes.js');
-const { verifyNovelID, verifyPayloadSize, verifyMethod } = require('../../middlewares.js');
+const { verifyNovelID, verifyPayloadSize, verifyMethod, errorHandler } = require('../../middlewares.js');
 const { errorMessages } = require('../../constants/messages.js');
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.use('/:id', verifyMethod, verifyNovelID, verifyPayloadSize);
+router.use('/:id', verifyNovelID, verifyPayloadSize);
 
 router.get('/:id', async (req, res, next) => {
   try {
@@ -51,6 +51,23 @@ router.patch('/:id', async (req, res, next) => {
   }
 });
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const deleted = await Novel.query()
+      .whereNull('deleted_at')
+      .andWhere('id', req.params.id)
+      .patch({
+        deleted_at: new Date().toISOString(),
+      })
+      .first()
+      .returning('*');
+    if (deleted) res.json(deleted);
+    else next();
+  } catch (err) {
+    next(err);
+  }
+})
+
 router.use('/:id/chapters', (req, res, next) => {
   req.id = req.params.id;
   next();
@@ -60,8 +77,8 @@ module.exports = router;
 
 /*
 * TODO
-* [] Set up novel schema with objection
+* [X] Set up novel schema with objection
 * [X] Add endpoint to create novel
 * [X] Add endpoint to update novel
-* [] Add endpoint to delete novel
+* [X] Add endpoint to delete novel
 */
