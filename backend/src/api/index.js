@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/novels', isLoggedIn, novels);
-router.use('/users', isLoggedIn, users);
+router.use('/novels', novels);
+router.use('/users', users);
 router.use('/auth', auth);
 
 module.exports = router;

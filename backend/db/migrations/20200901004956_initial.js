@@ -19,7 +19,7 @@ exports.up = async (knex) => {
       table.string('title').notNullable().unique();
       table.string('synopsis', 1000).notNullable();
       table.integer('view_count').unsigned().defaultTo(0);
-      table.string('cover_url', 2000).notNullable();
+      table.string('cover_url', 2000).notNullable().defaultTo('https://tinyurl.com/y25ht8ml');
 
       tableUtils.references(tableNames.authors, table);
       tableUtils.addDefaultColumns(table);

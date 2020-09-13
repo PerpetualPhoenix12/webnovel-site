@@ -7,9 +7,7 @@ const cookieParser = require('cookie-parser');
 
 const middlewares = require('./middlewares.js');
 const api = require('./api');
-const initObjection = require('./db.js');
-
-initObjection();
+require('./db.js');
 
 const app = express();
 

@@ -6,7 +6,6 @@
   "required": [
       "title",
       "synopsis",
-      "cover_url",
       "author_id"
   ],
   "properties": {

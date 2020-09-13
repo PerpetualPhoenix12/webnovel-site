@@ -4,6 +4,7 @@ const {
   UniqueViolationError,
   NotNullViolationError,
   ForeignKeyViolationError,
+  NotFoundError,
 } = require('objection');
 const jwt = require('./lib/jwt.js');
 const { errorMessages } = require('./constants/messages');
@@ -22,6 +23,7 @@ function errorHandler(err, req, res, next) {
         res.status(400).send({
           status: err.statusCode,
           message: err.message,
+          type: 'ModelValidationError',
         });
         break;
       default:
@@ -39,12 +41,17 @@ function errorHandler(err, req, res, next) {
   } else if (err instanceof NotNullViolationError) {
     res.status(400).send({
       mesesage: err.message,
-      type: 'NotNullViolationError',
+      type: 'NotNullViolation',
     });
   } else if (err instanceof ForeignKeyViolationError) {
-    res.status(409).send({
+    res.status(400).send({
       message: err.message,
       type: 'ForeignKeyViolation',
+    });
+  } else if (err instanceof NotFoundError) {
+    res.status(404).send({
+      message: err.message,
+      type: 'NotFound',
     });
   } else {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;

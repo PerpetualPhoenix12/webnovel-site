@@ -1,5 +1,8 @@
 const supertest = require('supertest');
 const app = require('../../app.js');
+const connection = require('../../db.js');
+
+afterAll(() => connection.destroy());
 
 describe('GET /api/v1/users', () => {
   it('should respond with an array of users', async (done) => {

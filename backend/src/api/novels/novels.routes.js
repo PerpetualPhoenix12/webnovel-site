@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
   res.json(novels);
 });
 
-
 router.post('/', async (req, res, next) => {
   try {
     const novel = await Novel.query().insert(req.body);
@@ -66,7 +65,7 @@ router.delete('/:id', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-})
+});
 
 router.use('/:id/chapters', (req, res, next) => {
   req.id = req.params.id;
@@ -74,11 +73,3 @@ router.use('/:id/chapters', (req, res, next) => {
 }, chapters);
 
 module.exports = router;
-
-/*
-* TODO
-* [X] Set up novel schema with objection
-* [X] Add endpoint to create novel
-* [X] Add endpoint to update novel
-* [X] Add endpoint to delete novel
-*/

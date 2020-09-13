@@ -44,6 +44,11 @@
           "$id": "#/properties/updated_at",
           "type": "string",
           "title": "The date the user was last updated."
+      },
+      "deleted_at": {
+          "$id": "#/properties/deleted_at",
+          "type": "string",
+          "title": "The date the user was deleted."
       }
   },
   "additionalProperties": false

@@ -15,7 +15,6 @@ router.get('/', async (req, res, next) => {
   return next();
 });
 
-// TODO: [] Add request data validation
 router.post('/', async (req, res, next) => {
   try {
     const chapter = req.body;
@@ -89,11 +88,3 @@ router.delete('/:number', async (req, res, next) => {
 });
 
 module.exports = router;
-
-/*
-* TODO
-* [X] Set up chapter schema with objection
-* [X] Add endpoint to create chapter
-* [X] Add endpoint to update chapter
-* [X] Add endpoint to delete chapter
-*/
